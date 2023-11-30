@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/landucci/ms-wallet/internal/entity"
+	"github.com/landucci/ms-wallet/internal/event"
+	"github.com/landucci/ms-wallet/pkg/events"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -52,7 +54,9 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 		Amount:        1000.0,
 	}
 
-	usecase := NewCreateTransactionUseCase(transactionGatewayMock, accountGatewayMock)
+	dispatcher := events.NewEventDispatcher()
+	event := event.NewTransactionCreated()
+	usecase := NewCreateTransactionUseCase(transactionGatewayMock, accountGatewayMock, dispatcher, event)
 	output, err := usecase.Execute(input)
 
 	assert.Nil(t, err)
